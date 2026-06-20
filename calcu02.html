@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>코스믹 사칙연산 계산기</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* 깊은 우주 배경색 (그라데이션) */
+        body {
+            background: radial-gradient(circle at center, #1e293b 0%, #020617 100%);
+            height: 100vh;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Orbitron', sans-serif; /* 미래적인 폰트 적용 */
+        }
+
+        /* 계산기 전체 박스 (유리 질감 효과) */
+        .calculator-container {
+            background: rgba(255, 255, 255, 0.05); /* 반투명한 흰색 배경 */
+            backdrop-filter: blur(15px); /* 배경을 흐릿하게 만드는 유리 효과 */
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 30px;
+            padding: 30px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+            width: 320px;
+        }
+
+        h2 {
+            color: #00ffff;
+            text-align: center;
+            font-size: 18px;
+            margin-bottom: 20px;
+            letter-spacing: 2px;
+        }
+
+        /* 숫자 출력창 (네온 효과) */
+        input[type="text"] {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid #00ffff;
+            color: #00ffff;
+            width: 100%;
+            height: 60px;
+            font-size: 24px;
+            text-align: right;
+            padding: 10px 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-sizing: border-box;
+            box-shadow: inset 0 0 10px rgba(0, 255, 255, 0.2);
+        }
+
+        /* 버튼들을 모아둔 박스 */
+        .button-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr); /* 4열 정렬 */
+            gap: 12px;
+        }
+
+        /* 기본 버튼 스타일 */
+        button {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            height: 55px;
+            border-radius: 12px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease; /* 부드러운 변화 */
+        }
+
+        /* 마우스를 올렸을 때 (Hover) */
+        button:hover {
+            background: #00ffff;
+            color: #020617;
+            box-shadow: 0 0 15px #00ffff;
+            transform: translateY(-3px); /* 위로 살짝 떠오름 */
+        }
+
+        /* 연산자 버튼만 보라색 포인트 */
+        .op {
+            color: #8A2BE2;
+            border-color: #8A2BE2;
+        }
+        
+        .op:hover {
+            background: #8A2BE2;
+            color: white;
+            box-shadow: 0 0 15px #8A2BE2;
+        }
+
+        /* 특수 버튼 (C, =) */
+        .clear { color: #ff3b30; border-color: #ff3b30; }
+        .equal { background: rgba(0, 255, 255, 0.2); border-color: #00ffff; }
+        
+    </style>
+</head>
+<body>
+
+    <div class="calculator-container">
+        <h2>COSMIC SYSTEM v1.0</h2>
+
+        <input type="text" id="display" readonly placeholder="0">
+        
+        <div class="button-grid">
+            <button class="clear" onclick="clearDisplay()">C</button>
+            <button class="op" onclick="appendOperator('/')">÷</button>
+            <button class="op" onclick="appendOperator('*')">×</button>
+            <button class="op" onclick="appendOperator('-')">-</button>
+            
+            <button onclick="appendNumber('7')">7</button>
+            <button onclick="appendNumber('8')">8</button>
+            <button onclick="appendNumber('9')">9</button>
+            <button class="op" onclick="appendOperator('+')">+</button>
+            
+            <button onclick="appendNumber('4')">4</button>
+            <button onclick="appendNumber('5')">5</button>
+            <button onclick="appendNumber('6')">6</button>
+            <button class="equal" onclick="calculate()">=</button>
+            
+            <button onclick="appendNumber('1')">1</button>
+            <button onclick="appendNumber('2')">2</button>
+            <button onclick="appendNumber('3')">3</button>
+            <button onclick="appendDot()">.</button>
+            
+            <button style="grid-column: span 4;" onclick="appendNumber('0')">0</button>
+        </div>
+    </div>
+
+    <script>
+        // 변수 선언
+        let currentInput = '0';  // 현재 화면에 표시되는 문자열
+        let previousInput = ''; // 직전 입력값 (연산용)
+        let operator = null;    // 선택된 연산자
+        let shouldResetDisplay = false; // 새로운 숫자를 입력할 때 화면을 초기화할지 여부
+
+        const display = document.getElementById('display');
+
+        // 화면 업데이트 함수
+        function updateDisplay() {
+            // 화면에 보여줄 때는 *, / 기호를 ×, ÷ 기호로 예쁘게 변경
+            let showText = currentInput.replace(/\*/g, '×').replace(/\//g, '÷');
+            display.value = showText;
+        }
+
+        // 숫자 입력 함수
+        function appendNumber(number) {
+            if (currentInput === '0' || shouldResetDisplay) {
+                currentInput = number;
+                shouldResetDisplay = false;
+            } else {
+                currentInput += number;
+            }
+            updateDisplay();
+        }
+
+        // 소수점 입력 함수
+        function appendDot() {
+            if (shouldResetDisplay) {
+                currentInput = '0';
+                shouldResetDisplay = false;
+            }
+            // 이미 소수점이 없을 때만 추가
+            if (!currentInput.includes('.')) {
+                currentInput += '.';
+            }
+            updateDisplay();
+        }
+
+        // 연산자 입력 함수
+        function appendOperator(nextOperator) {
+            const parsedCurrent = parseFloat(currentInput);
+
+            if (operator && !shouldResetDisplay) {
+                // 이미 연산자가 있는 상태에서 다른 연산자를 누르면 중간 계산 수행
+                previousInput = calculateValues(previousInput, parsedCurrent, operator);
+                currentInput = String(previousInput);
+            } else {
+                previousInput = currentInput;
+            }
+
+            operator = nextOperator;
+            shouldResetDisplay = true; // 다음 숫자 입력 시 화면 리셋 규칙 활성화
+            updateDisplay();
+        }
+
+        // 실제 사칙연산을 수행하는 순수 연산 함수
+        function calculateValues(first, second, op) {
+            const num1 = parseFloat(first);
+            const num2 = parseFloat(second);
+            if (isNaN(num1) || isNaN(num2)) return second;
+
+            switch (op) {
+                case '+': return num1 + num2;
+                case '-': return num1 - num2;
+                case '*': return num1 * num2;
+                case '/': 
+                    return num2 === 0 ? 'Error' : num1 / num2; // 0으로 나눌 때 예외처리
+                default: return second;
+            }
+        }
+
+        // '=' 버튼 클릭 시 최종 계산 함수
+        function calculate() {
+            if (!operator || shouldResetDisplay) return;
+
+            let result = calculateValues(previousInput, currentInput, operator);
+            
+            // 소수점 스크롤 방지를 위해 숫자가 너무 길면 8자리까지 제한
+            if (typeof result === 'number' && !Number.isInteger(result)) {
+                result = Math.round(result * 100000000) / 100000000;
+            }
+
+            currentInput = String(result);
+            operator = null;
+            shouldResetDisplay = true;
+            updateDisplay();
+        }
+
+        // 'C' 버튼 초기화 함수
+        function clearDisplay() {
+            currentInput = '0';
+            previousInput = '';
+            operator = null;
+            shouldResetDisplay = false;
+            updateDisplay();
+        }
+    </script>
+</body>
+</html>
+
+
