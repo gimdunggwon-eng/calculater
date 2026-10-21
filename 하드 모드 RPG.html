@@ -1,4 +1,13 @@
 <!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<filter id="shade" x="-8%" y="-8%" width="116%" height="116%" color-interpolation-filters="sRGB">
+ <feGaussianBlur in="SourceAlpha" stdDeviation="2.4" result="b"/>
+ <feDiffuseLighting in="b" surfaceScale="4.5" diffuseConstant="1.18" lighting-color="#fff" result="diff"><feDistantLight azimuth="235" elevation="58"/></feDiffuseLighting>
+ <feComposite in="SourceGraphic" in2="diff" operator="arithmetic" k1="1" k2="0" k3="0" k4="0" result="lit"/>
+ <feSpecularLighting in="b" surfaceScale="4.5" specularConstant=".7" specularExponent="26" lighting-color="#fff" result="spec"><feDistantLight azimuth="235" elevation="52"/></feSpecularLighting>
+ <feComposite in="spec" in2="SourceAlpha" operator="in" result="specIn"/>
+ <feComposite in="lit" in2="specIn" operator="arithmetic" k1="0" k2="1" k3=".55" k4="0"/>
+</filter></defs></svg>
 <title>하드 모드 RPG</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -32,8 +41,9 @@ body { background: var(--bg); color: var(--fg); font-family: var(--font-body); f
 .screen { display: flex; flex-direction: column; gap: 16px; }
 button { font: inherit; color: inherit; cursor: pointer; }
 button:focus-visible, .pick:focus-within, input:focus-visible { outline: 2px solid var(--ember); outline-offset: 2px; }
+.y-blade { opacity: 0; transition: opacity .06s; } .y-hilt { transition: opacity .06s; } .drawn .y-blade { opacity: 1; } .drawn .y-hilt { opacity: 0; }
 .o { stroke: #0d0a16; stroke-width: 3; stroke-linejoin: round; stroke-linecap: round; }
-.art { display: block; width: 100%; height: auto; overflow: visible; }
+.art { display: block; width: 100%; height: auto; overflow: visible; filter: url(#shade) drop-shadow(0 5px 5px rgba(0,0,0,.38)); }
 
 /* ---------- 아트 대기 모션 ---------- */
 .bob { animation: bob 2.6s ease-in-out infinite; transform-origin: 100px 206px; }
@@ -74,7 +84,7 @@ input[type=text] { background: var(--bg); border: 1px solid var(--line); color: 
 .title-art .tt { position: absolute; left: 18px; right: 18px; top: 16px; z-index: 4; }
 .title-art .ttl-dragon { position: absolute; right: -4%; bottom: 10%; width: 62%; z-index: 1; opacity: .9; }
 .title-art .cast { position: absolute; left: 3%; right: 3%; bottom: 7%; z-index: 3; display: flex; gap: 1%; align-items: flex-end; }
-.title-art .cast > div { width: 24%; }
+.title-art .cast > div { width: 15.5%; }
 .title-art .tt .lead { text-shadow: 0 1px 6px #000; color: #d7d0ee; }
 
 /* ---------- 선택 카드 ---------- */
@@ -128,6 +138,7 @@ input[type=text] { background: var(--bg); border: 1px solid var(--line); color: 
 .fighter.m.dragon { width: calc(var(--s) * 2); right: 0; }
 .fighter .mover, .fighter .flasher { will-change: transform; }
 .fighter.m .art { transform: scaleX(-1); }
+.fighter.m .art, .title-art .ttl-dragon .art { filter: drop-shadow(0 5px 5px rgba(0,0,0,.38)) saturate(1.1) contrast(1.06); }
 .fighter .aura { position: absolute; left: 50%; top: 52%; width: 150%; aspect-ratio: 1; border-radius: 50%; transform: translate(-50%, -50%); pointer-events: none; mix-blend-mode: screen; }
 .fighter .bubble { position: absolute; left: 50%; top: 52%; width: 125%; aspect-ratio: 1; transform: translate(-50%, -50%); border-radius: 50%; border: 3px solid rgba(190,215,255,.9); background: radial-gradient(circle, rgba(150,190,255,.05) 40%, rgba(150,190,255,.35)); box-shadow: 0 0 24px rgba(150,190,255,.7), inset 0 0 28px rgba(150,190,255,.5); animation: bub 2s ease-in-out infinite; pointer-events: none; }
 @keyframes bub { 50% { transform: translate(-50%, -50%) scale(1.04); opacity: .8; } }
@@ -342,26 +353,26 @@ const ART = {
   wizard() {
     return svg("0 0 200 220", `${SH(100, 44)}
 <g class="bob">
- <g class="sway" style="transform-origin:82px 100px"><path class="o" d="M82 100C64 132 58 180 56 202L96 198L104 104Z" fill="#33276f"/></g>
- <path class="o" d="M74 100Q102 86 132 100L146 202Q102 214 58 202Z" fill="#4a3a9c"/>
- <path d="M82 110Q102 104 124 110L132 152Q102 160 78 152Z" fill="#6a58d0" opacity=".45"/>
- <path d="M101 102h6l3 104h-12z" fill="#e8b84a" opacity=".85"/>
- <path d="M72 152Q102 164 134 152" stroke="#e8b84a" stroke-width="6" fill="none" stroke-linecap="round"/>
- <path class="o" d="M82 200h24v8H78z M104 200h24v8h-28z" fill="#2a1d5a"/>
- <circle class="o" cx="104" cy="84" r="20" fill="#f0c9a0"/>
- <path class="o" d="M88 90Q104 128 124 90Q104 100 88 90Z" fill="#f3f1f8"/>
- <circle cx="113" cy="82" r="3" fill="#0d0a16"/><path d="M106 75l12 2" stroke="#d8d4e8" stroke-width="3" stroke-linecap="round"/>
- <ellipse class="o" cx="104" cy="70" rx="38" ry="9" fill="#5b49c0"/>
- <path class="o" d="M80 68Q90 28 134 4Q120 34 130 68Z" fill="#6a56d6"/>
- <path d="M81 64Q104 74 129 64L130 69Q104 80 80 70Z" fill="#e8b84a"/>
- <path d="M104 40l3 7 7 .6-5.4 4.6 1.7 7.2-6.3-3.9-6.3 3.9 1.7-7.2-5.4-4.6 7-.6z" fill="#ffe27a"/>
- <path class="o" d="M116 108L148 126L142 140L110 124Z" fill="#4a3a9c"/>
- <g class="weapon" data-base="none" style="transform-origin:150px 130px">
-   <rect class="o" x="146" y="50" width="8" height="164" rx="3" fill="#7a5233"/>
-   <g class="pulse" style="transform-origin:150px 36px"><circle cx="150" cy="36" r="22" fill="#7fd6ff" opacity=".3"/></g>
-   <path class="o" d="M136 52Q150 66 164 52Q150 58 136 52Z" fill="#e8b84a"/>
-   <circle class="o" cx="150" cy="36" r="12" fill="#a8e8ff"/><circle cx="146" cy="32" r="4" fill="#fff" opacity=".85"/>
-   <circle class="o" cx="150" cy="132" r="8" fill="#f0c9a0"/>
+ <g class="sway" style="transform-origin:82px 100px"><path class="o" d="M82 100C64 132 58 180 56 202L96 198L104 104Z" fill="#14141c"/></g>
+ <path class="o" d="M74 100Q102 86 132 100L146 202Q102 214 58 202Z" fill="#23232f"/>
+ <path d="M84 112Q102 106 124 112L130 150Q102 158 80 150Z" fill="#33334a" opacity=".5"/>
+ <path class="o" d="M82 200h24v8H78z M104 200h24v8h-28z" fill="#12121a"/>
+ <path class="o" d="M88 108l-7 42l15 4l5-40z" fill="#b3202a"/><path d="M84 124l15 3M83 136l15 3" stroke="#e8b84a" stroke-width="3" stroke-linecap="round"/>
+ <path class="o" d="M82 94Q104 112 128 94L130 108Q104 126 80 108Z" fill="#b3202a"/>
+ <path d="M91 101l-1 13M102 106l-1 13M113 106l0 13M123 101l1 12" stroke="#e8b84a" stroke-width="3" stroke-linecap="round"/>
+ <circle class="o" cx="104" cy="74" r="22" fill="#f4d2ae"/>
+ <path class="o" d="M82 78Q75 42 98 35Q110 29 121 35Q137 42 128 76Q124 60 116 56Q110 64 100 58Q92 62 90 72Q86 74 82 78Z" fill="#15131a"/>
+ <path class="o" d="M94 38l-5-10l11 6zM108 33l1-11l9 10zM122 40l9-6l-2 13z" fill="#15131a"/>
+ <path d="M109 63l4-3l-1 4l4-2" stroke="#d9453a" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+ <circle cx="114" cy="78" r="7.5" fill="#fff" fill-opacity=".35" stroke="#2a1a14" stroke-width="2.2"/><circle cx="115.5" cy="78" r="2.8" fill="#1d2a14"/><circle cx="116.3" cy="77" r=".9" fill="#fff"/>
+ <path d="M121.5 77h4M106.5 76L91 71" stroke="#2a1a14" stroke-width="2" stroke-linecap="round"/>
+ <path d="M110 91Q116 94 122 91" stroke="#b5584f" stroke-width="2.3" fill="none" stroke-linecap="round"/>
+ <path class="o" d="M116 108L148 126L142 140L110 124Z" fill="#23232f"/>
+ <g class="weapon" data-base="none" style="transform-origin:150px 132px">
+   <rect class="o" x="148" y="70" width="5" height="64" rx="2" fill="#8a5a2e" transform="rotate(16 150 132)"/>
+   <g class="pulse" style="transform-origin:168px 72px"><circle cx="168" cy="72" r="14" fill="#ff8a7a" opacity=".3"/></g>
+   <circle cx="168" cy="72" r="3.6" fill="#ffd9d0"/>
+   <circle class="o" cx="150" cy="134" r="8" fill="#f4d2ae"/>
  </g>
 </g>`);
   },
@@ -389,6 +400,61 @@ const ART = {
    <path class="o" d="M134 34Q142 24 150 30Q158 24 166 34Q158 40 150 44Q142 40 134 34Z" fill="#e8b84a"/>
    <path class="o" d="M150 22l10 14-10 16-10-16z" fill="#79e0b0"/><path d="M146 30l4-4 2 8z" fill="#fff" opacity=".7"/>
    <circle class="o" cx="150" cy="134" r="8" fill="#f6d5b6"/>
+ </g>
+</g>`);
+  },
+
+  darkwizard() {
+    return svg("0 0 200 220", `${SH(100, 44)}
+<g class="bob">
+ <g class="sway" style="transform-origin:82px 100px"><path class="o" d="M82 100C62 132 54 182 52 204L98 200L104 104Z" fill="#14101f"/></g>
+ <path class="o" d="M74 100Q102 86 132 100L148 204Q102 216 54 204Z" fill="#1d1830"/>
+ <path d="M84 110Q102 104 124 110L130 160Q102 168 80 160Z" fill="#2d2650" opacity=".6"/>
+ <path d="M101 102h6l3 104h-12z" fill="#2f7a4a" opacity=".85"/>
+ <path d="M72 152Q102 164 134 152" stroke="#2f7a4a" stroke-width="6" fill="none" stroke-linecap="round"/>
+ <path class="o" d="M82 202h24v8H78z M104 202h24v8h-28z" fill="#0d0a16"/>
+ <path d="M44 206q14-20 28-4t24-2" stroke="#0d0a16" stroke-width="11" fill="none" stroke-linecap="round"/><path d="M44 206q14-20 28-4t24-2" stroke="#3fae6a" stroke-width="6" fill="none" stroke-linecap="round"/><circle cx="96" cy="200" r="2" fill="#ff3b3b"/>
+ <circle class="o" cx="104" cy="82" r="20" fill="#dfe6df"/>
+ <ellipse cx="113" cy="79" rx="4" ry="2.2" fill="#ff2a2a"/><path d="M106 72l12 3" stroke="#9aa89f" stroke-width="2.5" stroke-linecap="round"/>
+ <path d="M112 89l1.5 2M116 88l1.5 2" stroke="#6a766e" stroke-width="1.6" stroke-linecap="round"/><path d="M107 95Q113 97 119 94" stroke="#7a5a5a" stroke-width="2" fill="none" stroke-linecap="round"/>
+ <path class="o" d="M80 100Q104 122 128 100L124 92Q104 108 84 92Z" fill="#14101f"/>
+ <path class="o" d="M116 108L148 126L142 140L110 124Z" fill="#1d1830"/>
+ <g class="weapon" data-base="none" style="transform-origin:150px 132px">
+   <rect class="o" x="148" y="76" width="5" height="62" rx="2" fill="#e8e0c8" transform="rotate(22 150 132)"/>
+   <g class="pulse" style="transform-origin:171px 80px"><circle cx="171" cy="80" r="14" fill="#5dff8a" opacity=".3"/></g>
+   <circle cx="171" cy="80" r="4" fill="#b6ffcb"/>
+   <circle class="o" cx="150" cy="134" r="8" fill="#dfe6df"/>
+ </g>
+</g>`);
+  },
+
+  yeon() {
+    return svg("0 0 200 220", `${SH(100, 50)}
+<g class="bob">
+ <g transform="rotate(16 128 116)"><rect class="o" x="124" y="40" width="8" height="76" rx="3" fill="#15151c"/><g class="y-hilt"><rect class="o" x="121" y="28" width="14" height="14" rx="3" fill="#d9b25a"/><rect x="122" y="42" width="12" height="3" fill="#b8913a"/></g></g>
+ <g class="sway" style="transform-origin:86px 100px"><path class="o" d="M86 100C66 128 58 168 62 192L100 190L108 104Z" fill="#101016"/></g>
+ <rect class="o" x="82" y="154" width="18" height="46" rx="7" fill="#1d1d28"/><rect class="o" x="104" y="154" width="18" height="46" rx="7" fill="#1d1d28"/>
+ <path class="o" d="M77 196h26q3 0 3 5v5H74v-5q0-5 3-5z" fill="#0b0b11"/><path class="o" d="M101 196h26q3 0 3 5v5h-32v-5q0-5 3-5z" fill="#0b0b11"/>
+ <path class="o" d="M72 100Q102 86 132 100L138 158Q103 170 66 158Z" fill="#17171f"/>
+ <path d="M94 98L104 146L114 98Z" fill="#0b0b11"/><path d="M102 102h5l2 34l-4.5 5l-4.5-5z" fill="#34344a"/>
+ <path class="o" d="M66 154h72l6 24H60z" fill="#17171f"/>
+ <path d="M90 100L102 146L84 152L76 112Z" fill="#23232e"/><path d="M118 100L106 146L124 152L132 112Z" fill="#23232e"/>
+ <path d="M114 118l12-4" stroke="#d8dde6" stroke-width="2.2" stroke-linecap="round"/><circle cx="127.5" cy="113.5" r="2.3" fill="none" stroke="#d8dde6" stroke-width="1.5"/>
+ <path d="M126 98L82 152" stroke="#07070b" stroke-width="5" stroke-linecap="round"/><rect x="95" y="124" width="8" height="10" rx="1.5" fill="#b8bfcc" transform="rotate(-40 99 129)"/>
+ <path class="o" d="M72 104Q62 128 68 150L82 148Q82 126 88 108Z" fill="#17171f"/><circle class="o" cx="75" cy="154" r="7" fill="#f6d2ae"/>
+ <circle class="o" cx="104" cy="72" r="23" fill="#f6d2ae"/>
+ <path class="o" d="M80 78Q73 40 102 36Q134 33 128 76Q125 62 118 58Q112 66 102 60Q92 62 86 70Q82 72 80 78Z" fill="#a8542f"/>
+ <path d="M90 48Q104 40 121 46" stroke="#cf7a44" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+ <circle cx="116" cy="76" r="3.2" fill="#2a1a14"/><path d="M108 70l13 1" stroke="#5a3020" stroke-width="3" stroke-linecap="round"/>
+ <path d="M108 87Q114 90 120 87" stroke="#b5584f" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+ <path class="o" d="M126 110L150 126L143 138L121 124Z" fill="#17171f"/>
+ <g class="pulse" style="transform-origin:178px 98px"><circle cx="178" cy="98" r="18" fill="#6ec8ff" opacity=".28"/></g>
+ <circle class="o" cx="178" cy="98" r="8" fill="#a8e4ff"/><circle cx="175.5" cy="95.5" r="3" fill="#fff" opacity=".9"/>
+ <g class="weapon" data-base="rotate(10deg)" style="transform-origin:148px 132px;transform:rotate(10deg)">
+   <g class="y-blade"><path class="o" d="M144 122V52L148 22L152 52V122Z" fill="#1c1c26"/><path d="M147 32V118" stroke="#6a6a8e" stroke-width="1.6"/>
+   <rect class="o" x="138" y="120" width="20" height="6" rx="2.5" fill="#d9b25a"/><rect class="o" x="144" y="126" width="8" height="16" rx="3" fill="#15151c"/></g>
+   <rect x="140" y="132" width="9" height="6" rx="1.2" fill="#c9ced8"/>
+   <circle class="o" cx="148" cy="134" r="8.5" fill="#f6d2ae"/>
  </g>
 </g>`);
   },
@@ -717,6 +783,28 @@ function slashFx(x, y, o) {
   fxl.appendChild(el);
   anim(el, [{ opacity: 0, clipPath: "inset(0 100% 0 0)" }, { opacity: 1, clipPath: "inset(0 0 0 0)", offset: 0.35 }, { opacity: 0, clipPath: "inset(0 0 0 0)" }], { duration: o.ms || 340, easing: "ease-out" }).then(() => el.remove());
 }
+function boltFx(x, y, o) {
+  o = o || {}; const H = Math.max(120, y), N = 9, W = 200, thin = !!o.thin, pts = [];
+  for (let i = 0; i <= N; i++) pts.push([W / 2 + (i === N ? 0 : (i ? (Math.random() - 0.5) * (thin ? 44 : 64) : 0)), (H * i) / N]);
+  const path = pts.map((q, i) => (i ? "L" : "M") + q[0].toFixed(1) + " " + q[1].toFixed(1)).join("");
+  let br = "";
+  if (!thin) for (let k = 0; k < 3; k++) { const b = pts[2 + k * 2]; br += `<path d="M${b[0]} ${b[1]}l${(Math.random() - 0.5) * 90} ${28 + Math.random() * 30}l${(Math.random() - 0.5) * 60} ${24 + Math.random() * 24}" stroke="#bfe6ff" stroke-width="3" fill="none" stroke-linejoin="round"/>`; }
+  const el = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  el.setAttribute("viewBox", `0 0 ${W} ${H}`);
+  el.style.cssText = `position:absolute;left:${x - W / 2}px;top:0;width:${W}px;height:${H}px;pointer-events:none;overflow:visible;filter:drop-shadow(0 0 14px #6ec8ff) drop-shadow(0 0 30px #a8e4ff)`;
+  el.innerHTML = `<path d="${path}" stroke="#6ec8ff" stroke-width="${thin ? 7 : 20}" fill="none" stroke-linejoin="round" opacity=".7"/>${br}<path d="${path}" stroke="#fff" stroke-width="${thin ? 2.4 : 7}" fill="none" stroke-linejoin="round"/>`;
+  fxl.appendChild(el);
+  anim(el, [{ opacity: 0 }, { opacity: 1, offset: 0.1 }, { opacity: 0.25, offset: 0.28 }, { opacity: 1, offset: 0.42 }, { opacity: 0 }], { duration: thin ? 360 : 620 }).then(() => el.remove());
+}
+function patronusFx(a, b) {
+  const el = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  el.setAttribute("viewBox", "0 0 100 80");
+  el.style.cssText = `position:absolute;left:${a.x - 60}px;top:${a.y - 50}px;width:120px;height:96px;pointer-events:none;overflow:visible;filter:drop-shadow(0 0 8px #bfe6ff) drop-shadow(0 0 22px #fff)`;
+  el.innerHTML = `<g fill="#eaf6ff" stroke="#bfe6ff" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"><ellipse cx="42" cy="46" rx="26" ry="12"/><path d="M62 42L76 24L84 24L82 32L72 48Z"/><path d="M78 22Q88 18 94 24L96 30L84 32Z"/><path d="M26 56L20 76M36 58L34 76M54 58L58 76M64 56L72 74" fill="none" stroke-width="4"/><path d="M80 22L78 8M78 14L70 8M79 11L86 3M83 20L90 10" fill="none" stroke-width="2.4"/><path d="M18 42L8 36" fill="none" stroke-width="4"/></g>`;
+  fxl.appendChild(el);
+  const dx = b.x - a.x, dy = b.y - a.y;
+  return anim(el, [{ transform: "translate(0,0) scale(.4)", opacity: 0 }, { transform: `translate(${dx * 0.25}px,${dy * 0.25 - 60}px) scale(.9)`, opacity: 1, offset: 0.3 }, { transform: `translate(${dx * 0.65}px,${dy * 0.65 - 40}px) scale(1.3)`, opacity: 1, offset: 0.7 }, { transform: `translate(${dx}px,${dy}px) scale(1.9)`, opacity: 0.2 }], { duration: 820, easing: "ease-in" }).then(() => el.remove());
+}
 function clawFx(x, y, color) {
   for (let i = 0; i < 3; i++) setTimeout(() => slashFx(x + (i - 1) * 22, y + (i - 1) * 6, { color, angle: 62, size: 110, ms: 280 }), i * 60);
 }
@@ -859,22 +947,28 @@ class Warrior extends Character {
   names() { return { sp: "분노 폭발", spSub: "분노 30 · 공격력 ×2", ul: "파멸의 대지 가르기", ulSub: "분노 100 · ×8.5", atkSub: "분노 +10" }; }
 }
 class Wizard extends Character {
-  constructor(n) { super(n, 80, 35, 8); this.mana = 100; this.kind = "마법사"; this.key = "wizard"; }
+  constructor(n) { super(n, 90, 36, 9); this.mana = 100; this.kind = "마법사"; this.key = "wizard"; }
   canBolt() { return this.mana >= 10; }
   attack(o) {
-    if (this.mana >= 10) { log(`🔮 ${this.name}이(가) ${o.name}에게 마법 화살 발사!`, "act"); this.mana -= 10; o.takeDamage(this.atk); }
-    else { log(`👊 ${this.name}이(가) ${o.name}을(를) 지팡이로 때린다! (마나 부족)`, "act"); o.takeDamage(5); }
+    if (this.mana >= 10) { log(`🔴 ${this.name}이(가) ${o.name}에게 [익스펠리아르무스]! 붉은 섬광!`, "act"); this.mana -= 10; o.takeDamage(Math.floor(this.atk * 1.1)); this.regen(25); }
+    else { log(`👊 ${this.name}이(가) ${o.name}을(를) 마법봉으로 찌른다! (마나 부족)`, "act"); o.takeDamage(5); this.regen(20); }
   }
+  regen(n) { const b = this.mana; this.mana = Math.min(100, this.mana + n); log(`✨ 마나 회복! +${this.mana - b} (현재 마나: ${this.mana}/100)`, "good"); }
   canSpecial() { return this.mana >= 40; }
-  special(o) { log(`🌋 ${this.name}의 파이어볼!`, "act"); this.mana -= 40; o.takeDamage(this.atk * 3, { big: true }); }
+  special(o) { log(`⚡ ${this.name}의 [스투페파이]! 눈부신 붉은 섬광이 터집니다!`, "act"); this.mana -= 40; o.takeDamage(Math.floor(this.atk * 3.5), { big: true }); }
   canUltimate() { return this.mana >= 60; }
-  ultimate(o) { log(`☄️☄️ ${this.name}의 궁극기! [메테오 스트라이크]!! ☄️☄️`, "act"); this.mana -= 60; o.takeDamage(Math.floor(this.atk * 4.5), { big: true }); }
+  ultimate(o) {
+    log(`💥💥 ${this.name}의 궁극기! [봄바르다 맥시마]!! 모든 것을 날려버리는 대폭발! 💥💥`, "act");
+    this.mana -= 60;
+    log("🔥 폭발이 방어를 꿰뚫습니다! (방어 무시)", "bad");
+    o.takeDamage(Math.floor(this.atk * 8) + o.def, { big: true });
+  }
   resource() { return { label: "마나", v: this.mana, max: 100, cls: "mana" }; }
-  names() { return { sp: "파이어볼", spSub: "마나 40 · 공격력 ×3", ul: "메테오 스트라이크", ulSub: "마나 60 · ×4.5", atkSub: "마나 10" }; }
+  names() { return { sp: "스투페파이", spSub: "마나 40 · 공격력 ×3.5", ul: "봄바르다 맥시마", ulSub: "마나 60 · 방어 무시 ×8 · 대폭발", atkSub: "익스펠리아르무스 · 마나 -10 +25" }; }
 }
 class Healer extends Character {
   constructor(n) { super(n, 100, 15, 10); this.mana = 80; this.kind = "힐러"; this.key = "healer"; }
-  attack(o) { log(`✨ ${this.name}이(가) ${o.name}에게 빛의 화살!`, "act"); o.takeDamage(this.atk); }
+  attack(o) { log(`✨ ${this.name}이(가) ${o.name}에게 빛의 화살!`, "act"); o.takeDamage(this.atk); const b = this.mana; this.mana = Math.min(80, this.mana + 15); log(`✨ 마나 회복! +${this.mana - b} (현재 마나: ${this.mana}/80)`, "good"); }
   canSpecial() { return this.mana >= 30; }
   special() { log(`💚 ${this.name}을(를) 치유! ${this.name}의 HP +40`, "good"); this.mana -= 30; this.heal(40); log(`${this.name}의 현재 HP: ${this.hp}`, "good"); }
   canUltimate() { return this.mana >= 50; }
@@ -884,7 +978,70 @@ class Healer extends Character {
     log(`✨ HP가 완전히 회복되고, 공격력이 +15 증가합니다! (현재 HP: ${this.hp} | 공격력: ${this.atk})`, "good");
   }
   resource() { return { label: "마나", v: this.mana, max: 80, cls: "mana" }; }
-  names() { return { sp: "치유", spSub: "마나 30 · HP +40", ul: "신의 은총", ulSub: "마나 50 · HP 완쾌, 공격 +15", atkSub: "빛의 화살" }; }
+  names() { return { sp: "치유", spSub: "마나 30 · HP +40", ul: "신의 은총", ulSub: "마나 50 · HP 완쾌, 공격 +15", atkSub: "빛의 화살 · 마나 +15" }; }
+}
+class DarkWizard extends Character {
+  constructor(n) { super(n, 90, 36, 9); this.mana = 100; this.horcrux = true; this.kind = "흑마법사"; this.key = "darkwizard"; }
+  gain(n) { const b = this.mana; this.mana = Math.min(100, this.mana + n); log(`✨ 마나 회복! +${this.mana - b} (현재 마나: ${this.mana}/100)`, "good"); }
+  attack(o) {
+    log(`🩸 ${this.name}이(가) ${o.name}에게 [크루시오]! 고통의 저주!`, "act");
+    o.takeDamage(this.atk);
+    o._cruc = o._cruc || 0;
+    if (o._cruc < 5) { o._cruc++; o.def = Math.max(0, o.def - 2); log(`😖 고통에 몸부림칩니다. ${o.name}의 방어력 -2 (현재 ${o.def}, 최대 -10)`, "good"); }
+    this.gain(15);
+  }
+  canSpecial() { return this.mana >= 45 && this.hp > Math.floor(this.maxHp * 0.1); }
+  special(o) {
+    log(`🔥 ${this.name}의 [악마의 불길]! 저주받은 화염이 모든 것을 집어삼킵니다!`, "act");
+    this.mana -= 45; o.takeDamage(Math.floor(this.atk * 3.5), { big: true });
+    const c = Math.floor(this.maxHp * 0.1); this.hp -= c;
+    log(`🩸 불길이 주인마저 삼킵니다... HP -${c}`, "bad");
+    Q.push({ t: "dmg", who: this, amount: c, hp: this.hp });
+  }
+  canUltimate() { return this.mana >= 70; }
+  ultimate(o) {
+    log(`💀💀 ${this.name}의 궁극기! [아바다 케다브라]!! 💀💀`, "act");
+    this.mana -= 70; const ds = Math.floor(this.maxHp * 0.3); this.heal(ds); log(`🩸 저주가 영혼을 흡수합니다! HP +${ds}`, "good");
+    if (!o.boss || o.hp <= o.maxHp * 0.25) {
+      log(`☠️ 죽음의 저주가 생명을 끊어냅니다! (${o.boss ? "보스 처형" : "즉사"})`, "bad");
+      o.takeDamage(o.hp + (o.shield || 0) + o.def, { big: true });
+    } else {
+      log("☠️ 보스에게는 즉사가 통하지 않지만, 방어를 꿰뚫는 저주가 적중합니다!", "bad");
+      o.takeDamage(this.atk * 7 + o.def, { big: true });
+    }
+  }
+  canRevive() { return this.horcrux; }
+  revive() {
+    this.horcrux = false;
+    log(`⚱️ [호크룩스] ${this.name}의 영혼 조각이 부서지며 육체가 되살아납니다!`, "lvl");
+    this.heal(Math.floor(this.maxHp * 0.5)); this.mana = Math.min(100, this.mana + 30);
+    log(`💚 HP ${this.hp}로 부활! 마나 +30 (호크룩스 소멸)`, "good");
+  }
+  resource() { return { label: this.horcrux ? "마나 ⚱️" : "마나", v: this.mana, max: 100, cls: "mana" }; }
+  names() { return { sp: "악마의 불길", spSub: "마나 45 · ×3.5 · 내 HP -10%", ul: "아바다 케다브라", ulSub: "마나 70 · 관통 ×7 · 즉사/처형 · HP 30% 흡수", atkSub: "크루시오 · 방어 -2 · 마나 +15" }; }
+}
+class Yeon extends Character {
+  constructor(n) { super(n, 10000, 10000, 10000); this.spirit = 60; this.kind = "구미호 신"; this.key = "yeon"; }
+  gain(n) { const b = this.spirit; this.spirit = Math.min(100, this.spirit + n); log(`✨ 신력 회복! +${this.spirit - b} (현재 신력: ${this.spirit}/100)`, "good"); }
+  attack(o) {
+    log(`⚔️ [발도] ${this.name}이(가) 등의 검을 뽑아 ${o.name}을(를) 베어냅니다!`, "act");
+    o.takeDamage(this.atk); this.gain(20);
+  }
+  canSpecial() { return this.spirit >= 40; }
+  special(o) {
+    log(`🔮 [여우구슬] ${this.name}의 구슬이 천 년의 힘을 터뜨립니다!`, "act");
+    this.spirit -= 40; o.takeDamage(Math.floor(this.atk * 2.5), { big: true });
+    this.heal(1500); log(`💙 구슬의 기운이 몸을 감쌉니다. HP +1500 (현재 HP: ${this.hp})`, "good");
+  }
+  canUltimate() { return this.spirit >= 100; }
+  ultimate(o) {
+    log(`⚡⚡ [천뢰강림 天雷降臨]!! ${this.name}이(가) 검을 높이 치켜들자 하늘이 갈라집니다! ⚡⚡`, "act");
+    this.spirit -= 100;
+    log("🌩️ 모든 것을 불태우는 거대한 번개가 내리꽂힙니다! (방어 무시)", "bad");
+    o.takeDamage(Math.floor(this.atk * 10) + o.def, { big: true });
+  }
+  resource() { return { label: "신력 💠", v: this.spirit, max: 100, cls: "mana" }; }
+  names() { return { sp: "여우구슬", spSub: "신력 40 · ×2.5 · HP +1500", ul: "천뢰강림", ulSub: "신력 100 · 방어 무시 ×10 · 거대 번개", atkSub: "발도 · 신력 +20" }; }
 }
 class Hero extends Character {
   constructor(n) { super(n, 200, 80, 60); this.mana = 50; this.kind = "영웅"; this.key = "hero"; }
@@ -1005,6 +1162,7 @@ async function moveTo(side, x, y, ms, ease) {
   const a = m.animate([{ transform: cur }, { transform: next }], { duration: RM ? ms * 0.4 : ms, easing: ease || "ease-out", fill: "forwards" });
   await a.finished.catch(() => {}); m.style.transform = next; a.cancel();
 }
+const drawSword = (on) => F.p.flash.classList.toggle("drawn", on);
 const weaponEl = (side) => F[side].flash.querySelector(".weapon");
 async function weaponTo(side, tf, ms) {
   const w = weaponEl(side); if (!w) return;
@@ -1093,33 +1251,33 @@ const CH = {
     async attack(apply) {
       if (!player.canBolt()) { await melee("p", { sw: "cast", apply, dash: 110, overlap: 0.2, fx: () => sfx.hit() }); return; }
       await weaponTo("p", SW.cast.wind, 160); sfx.magic();
-      const from = pt("p", 0.76, 0.17), to = target("p");
-      await Promise.all([travel(from, to, 300, "#8fe3ff", 9), weaponTo("p", SW.cast.hit, 220)]);
-      burst(to.x, to.y, { n: 18, color: ["#8fe3ff", "#fff"], speed: 4, life: 420 });
+      const from = pt("p", 0.84, 0.33), to = target("p");
+      await Promise.all([travel(from, to, 260, "#ff4a4a", 9), weaponTo("p", SW.cast.hit, 220)]);
+      burst(to.x, to.y, { n: 20, color: ["#ff4a4a", "#ffb0a0", "#fff"], speed: 4, life: 420 });
       apply(); await flush(); await weaponBase("p", 200);
     },
     async special(apply) {
       await weaponTo("p", SW.cast.wind, 200);
-      const from = pt("p", 0.76, 0.17); sfx.magic();
-      await charge(from, "#ff9a3a", 520);
-      const to = target("p"); sfx.fire();
-      await Promise.all([travel(from, to, 380, "#ff8a2a", 15), weaponTo("p", SW.cast.hit, 240)]);
-      burst(to.x, to.y, { n: 50, color: ["#ff5a1f", "#ffb347", "#fff3b8"], speed: 7, size: 5, life: 640, grav: 0.05 });
-      ringFx(to.x, to.y, "#ff8a3a", 190, 560); flash("#ff9a4a", 0.4, 360); shake(10, 360); sfx.boom();
-      apply(); await flush(); await weaponBase("p", 220);
+      const from = pt("p", 0.84, 0.33); sfx.magic();
+      await charge(from, "#ff2a2a", 480); sfx.fire();
+      const to = target("p");
+      const sp = stream(from, to, 460, ["#ff2a2a", "#ff8a6a", "#fff"]);
+      await weaponTo("p", SW.cast.hit, 240); await wait(240);
+      burst(to.x, to.y, { n: 60, color: ["#ff2a2a", "#ff9a7a", "#fff"], speed: 8, size: 5, life: 640 });
+      ringFx(to.x, to.y, "#ff4a3a", 200, 580); flash("#ff4a3a", 0.45, 380); shake(11, 380); sfx.boom();
+      apply(); await flush(); await sp; await weaponBase("p", 220);
     },
     async ultimate(apply) {
-      await weaponTo("p", "rotate(-22deg)", 260); sfx.magic();
-      const from = pt("p", 0.76, 0.17); flash("#000", 0.5, 1100);
-      await charge(from, "#a8e8ff", 420);
-      ringFx(from.x, from.y, "#a8e8ff", 120, 500);
-      const to = target("p"), start = { x: to.x + 260, y: -40 };
-      sfx.fire();
-      await travel(start, to, 560, "#ff8a2a", 20);
-      burst(to.x, to.y, { n: 90, color: ["#ff5a1f", "#ffb347", "#fff3b8", "#ff3b1f"], speed: 9, size: 6, life: 820, grav: 0.04 });
-      ringFx(to.x, to.y, "#ffb347", 280, 700); setTimeout(() => ringFx(to.x, to.y, "#ff5a1f", 200, 600), 120);
-      flash("#ffe0a0", 0.85, 520); shake(17, 560); sfx.boom();
-      apply(); await flush(); await weaponBase("p", 240);
+      aura("p", "#ff9a3a", 1000); sfx.magic();
+      await weaponTo("p", "rotate(-26deg)", 260);
+      const from = pt("p", 0.84, 0.3), to = target("p"), f = feet("m");
+      await charge(from, "#ff9a3a", 560); sfx.fire();
+      const sp = stream(from, to, 420, ["#ff9a3a", "#ffd36a", "#fff"]);
+      await weaponTo("p", SW.cast.hit, 200); await wait(300);
+      ringFx(f.x, f.y, "#ff9a3a", 170, 520); shake(6, 520); flash("#ff8a2a", 0.25, 460);
+      await wait(380);
+      explosionFx(to.x, to.y); flash("#fff", 0.95, 420); shake(26, 800); sfx.boom();
+      apply(); await flush(); await sp; await wait(250); await weaponBase("p", 260);
     },
   },
   healer: {
@@ -1140,6 +1298,72 @@ const CH = {
       const me = pt("p", 0.5, 0.55); pillarFx(me.x, "#ffe27a", 1000, 120); flash("#fff8c0", 0.5, 600);
       ringFx(me.x, me.y, "#ffe27a", 200, 800); sparkles("p", ["#ffe27a", "#fff", "#7dffb0"], 1100); sfx.heal(); setTimeout(() => sfx.level(), 150);
       await wait(520); apply(); await flush(); await wait(300); await weaponBase("p", 200);
+    },
+  },
+  darkwizard: {
+    async attack(apply) {
+      await weaponTo("p", SW.cast.wind, 160); sfx.magic();
+      const from = pt("p", 0.86, 0.36), to = target("p");
+      await Promise.all([travel(from, to, 280, "#ff3b4a", 9), weaponTo("p", SW.cast.hit, 220)]);
+      burst(to.x, to.y, { n: 20, color: ["#ff3b4a", "#7a0f1c", "#fff"], speed: 4, life: 440 });
+      apply(); await flush(); await weaponBase("p", 200);
+    },
+    async special(apply) {
+      await weaponTo("p", SW.cast.wind, 200);
+      const from = pt("p", 0.86, 0.36); sfx.magic();
+      await charge(from, "#ff5a1f", 520);
+      const to = target("p"); sfx.fire();
+      const sp = stream(from, to, 520, ["#ff3b1f", "#ffb347", "#7a0f1c", "#fff3b8"]);
+      await weaponTo("p", SW.cast.hit, 240); await wait(300);
+      burst(to.x, to.y, { n: 60, color: ["#ff3b1f", "#ffb347", "#3a0a10"], speed: 7, size: 5, life: 700, grav: 0.04 });
+      ringFx(to.x, to.y, "#ff5a1f", 200, 600); flash("#ff5a2a", 0.4, 380); shake(11, 380); sfx.boom();
+      apply(); await flush(); await sp; await weaponBase("p", 220);
+    },
+    async ultimate(apply) {
+      await weaponTo("p", "rotate(-22deg)", 260); sfx.magic();
+      const from = pt("p", 0.86, 0.36); flash("#000", 0.55, 1100);
+      await charge(from, "#5dff8a", 520);
+      ringFx(from.x, from.y, "#5dff8a", 130, 500);
+      const to = target("p"); sfx.fire();
+      const sp = stream(from, to, 460, ["#5dff8a", "#b6ffcb", "#fff"]);
+      await weaponTo("p", SW.cast.hit, 200); await wait(260);
+      burst(to.x, to.y, { n: 80, color: ["#5dff8a", "#b6ffcb", "#fff"], speed: 8, size: 5, life: 760 });
+      ringFx(to.x, to.y, "#5dff8a", 260, 700); flash("#7dff9a", 0.7, 480); shake(14, 480); sfx.boom();
+      apply(); await flush(); await sp; await weaponBase("p", 240);
+    },
+  },
+  yeon: {
+    async attack(apply) {
+      await weaponTo("p", "rotate(-70deg)", 150);
+      const hb = pt("p", 0.75, 0.19); drawSword(true); sfx.whoosh();
+      ringFx(hb.x, hb.y, "#e8f6ff", 70, 380); burst(hb.x, hb.y, { n: 10, color: ["#fff", "#a8e4ff"], speed: 3, life: 300 });
+      await melee("p", { sw: "chop", apply, fx: () => { const t = target("p"); slashFx(t.x, t.y, { color: "#a8e4ff", size: 160 }); setTimeout(() => slashFx(t.x, t.y, { color: "#fff", size: 130, angle: 30, flip: true }), 70); sfx.slash(); } });
+      await wait(90); drawSword(false); ringFx(hb.x, hb.y, "#a8e4ff", 50, 300);
+    },
+    async special(apply) {
+      await weaponTo("p", SW.cast.wind, 200);
+      const from = pt("p", 0.88, 0.45); sfx.magic();
+      await charge(from, "#8fd8ff", 520); sfx.fire();
+      const to = target("p");
+      await Promise.all([travel(from, to, 340, "#a8e4ff", 17), weaponTo("p", SW.cast.hit, 240)]);
+      burst(to.x, to.y, { n: 55, color: ["#6ec8ff", "#fff", "#ff8a3a"], speed: 7, size: 5, life: 680 });
+      ringFx(to.x, to.y, "#6ec8ff", 200, 600); flash("#a8e4ff", 0.45, 380); shake(10, 360); sfx.boom();
+      apply(); await flush(); sparkles("p", ["#a8e4ff", "#fff"], 800); sfx.heal(); await weaponBase("p", 220);
+    },
+    async ultimate(apply) {
+      drawSword(true); aura("p", "#a8e4ff", 1200); sfx.roar();
+      await weaponTo("p", "rotate(-32deg)", 280);
+      flash("#04061a", 0.7, 1400);
+      const to = target("p"), tip = pt("p", 0.72, 0.1);
+      await charge(tip, "#a8e4ff", 620); sfx.magic();
+      boltFx(to.x, to.y, { thin: true }); await wait(300);
+      sfx.boom(); flash("#fff", 0.95, 320); shake(22, 760);
+      boltFx(to.x, to.y);
+      burst(to.x, to.y, { n: 130, color: ["#fff", "#a8e4ff", "#ffe66a"], speed: 11, size: 6, life: 900 });
+      for (let k = 0; k < 3; k++) setTimeout(() => ringFx(to.x, to.y, k % 2 ? "#ffe66a" : "#a8e4ff", 200 + k * 70, 640), k * 90);
+      for (let k = 0; k < 4; k++) setTimeout(() => boltFx(to.x + rnd(-140, 140), to.y + rnd(-30, 30), { thin: true }), 140 + k * 100);
+      await wait(200); apply(); await flush(); await wait(300);
+      await weaponBase("p", 300); drawSword(false);
     },
   },
   hero: {
@@ -1356,7 +1580,8 @@ function applyArea() {
 }
 function resetFighter(s) {
   const f = F[s]; f.flash.getAnimations().forEach((x) => x.cancel()); f.mover.getAnimations().forEach((x) => x.cancel());
-  f.mover.style.cssText = ""; f.flash.style.cssText = "";
+  void f.flash.offsetWidth;
+  f.mover.style.cssText = ""; f.flash.style.cssText = ""; f.flash.style.opacity = "1"; f.mover.style.opacity = "1";
   f.el.querySelectorAll(".aura,.bubble").forEach((n) => n.remove());
 }
 
@@ -1365,7 +1590,7 @@ async function newGame() {
   sfx.unlock(); sfx.ui();
   const name = ($("#name").value || "").trim() || "용사";
   const job = document.querySelector("input[name=job]:checked").value;
-  const Cls = { warrior: Warrior, wizard: Wizard, healer: Healer, hero: Hero }[job];
+  const Cls = { warrior: Warrior, wizard: Wizard, healer: Healer, darkwizard: DarkWizard, yeon: Yeon, hero: Hero }[job];
   totalCount = 0; monsterCount = 0; Q.length = 0;
   player = new Cls(name); monster = null; areaIdx = -1; PL.m = {};
   const g = document.querySelector("input[name=sgear]:checked").value;
@@ -1439,6 +1664,71 @@ async function spawn(afterReward) {
   busy = false; setPill("me"); setControls();
 }
 
+const SKILL_COL = { warrior: "#ff8a3a", wizard: "#ff5a4a", healer: "#7dffb0", darkwizard: "#5dff8a", yeon: "#6ec8ff", hero: "#ffd36a" };
+function fxEl(css, parent) { const d = document.createElement("div"); d.style.cssText = css; (parent || fxl).appendChild(d); return d; }
+function skillTag(text, color) {
+  if (RM) return;
+  const c = pt("p", 0.5, -0.02);
+  const d = fxEl(`position:absolute;left:${c.x}px;top:${c.y}px;transform:translate(-50%,-100%);padding:3px 14px;border-radius:999px;font-weight:800;font-size:15px;letter-spacing:.06em;color:#fff;background:linear-gradient(90deg,transparent,${color}cc,transparent);text-shadow:0 0 8px ${color},0 1px 0 #000;white-space:nowrap;pointer-events:none;z-index:30`);
+  d.textContent = text;
+  anim(d, [{ opacity: 0, transform: "translate(-50%,-60%) scale(.7)" }, { opacity: 1, transform: "translate(-50%,-100%) scale(1.08)", offset: 0.18 }, { opacity: 1, transform: "translate(-50%,-110%) scale(1)", offset: 0.75 }, { opacity: 0, transform: "translate(-50%,-140%) scale(1)" }], { duration: 1000 }).then(() => d.remove());
+}
+function cutIn(name, sub, color) {
+  if (RM) return wait(250);
+  const wrap = fxEl("position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:60", stage);
+  const dim = fxEl("position:absolute;inset:0;background:radial-gradient(circle at 50% 50%,rgba(0,0,0,.25),rgba(0,0,0,.82))", wrap);
+  const band = fxEl(`position:absolute;left:-10%;top:34%;width:120%;height:92px;transform:rotate(-5deg);background:linear-gradient(90deg,transparent,${color}99 18%,${color}ee 50%,${color}99 82%,transparent);box-shadow:0 0 40px ${color}`, wrap);
+  fxEl("position:absolute;inset:0;background:repeating-linear-gradient(90deg,rgba(255,255,255,.55) 0 2px,transparent 2px 38px);opacity:.45", band);
+  const txt = fxEl(`position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;text-shadow:0 0 14px ${color},3px 3px 0 rgba(0,0,0,.55);font-weight:900;font-style:italic;font-size:34px;letter-spacing:.08em;line-height:1`, band);
+  txt.innerHTML = `<span>${name}</span><span style="font-size:12px;letter-spacing:.3em;opacity:.9;margin-top:7px">${sub}</span>`;
+  flash(color, 0.35, 300);
+  anim(dim, [{ opacity: 0 }, { opacity: 1, offset: 0.15 }, { opacity: 1, offset: 0.8 }, { opacity: 0 }], { duration: 900 });
+  anim(band, [{ transform: "rotate(-5deg) translateX(-100%)" }, { transform: "rotate(-5deg) translateX(0)", offset: 0.22, easing: "ease-out" }, { transform: "rotate(-5deg) translateX(3%)", offset: 0.78 }, { transform: "rotate(-5deg) translateX(100%)" }], { duration: 900 });
+  anim(txt, [{ transform: "scale(1.4)", opacity: 0 }, { transform: "scale(1)", opacity: 1, offset: 0.25 }, { transform: "scale(1.04)", opacity: 1, offset: 0.8 }, { opacity: 0 }], { duration: 900 });
+  return wait(880).then(() => wrap.remove());
+}
+function speedLines(t, color, n, power) {
+  if (RM) return;
+  const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  svg.setAttribute("viewBox", "-200 -200 400 400");
+  svg.style.cssText = `position:absolute;left:${t.x - 200}px;top:${t.y - 200}px;width:400px;height:400px;pointer-events:none;overflow:visible;z-index:25`;
+  let h = "";
+  for (let i = 0; i < n; i++) { const a = Math.random() * Math.PI * 2, r1 = 26 + Math.random() * 22, r2 = r1 + (50 + Math.random() * 90) * power; h += `<line x1="${Math.cos(a) * r1}" y1="${Math.sin(a) * r1}" x2="${Math.cos(a) * r2}" y2="${Math.sin(a) * r2}" stroke="${i % 3 ? "#fff" : color}" stroke-width="${1.5 + Math.random() * 3}" stroke-linecap="round"/>`; }
+  svg.innerHTML = h; fxl.appendChild(svg);
+  anim(svg, [{ opacity: 1, transform: "scale(.55)" }, { opacity: 1, transform: "scale(1)", offset: 0.4 }, { opacity: 0, transform: "scale(1.35)" }], { duration: 380, easing: "ease-out" }).then(() => svg.remove());
+}
+function groundWave(color, power) {
+  if (RM) return; const f = feet("m");
+  for (let i = 0; i < 2; i++) {
+    const d = fxEl(`position:absolute;left:${f.x}px;top:${f.y}px;width:120px;height:34px;border:3px solid ${color};border-radius:50%;box-shadow:0 0 16px ${color},inset 0 0 12px ${color};pointer-events:none;opacity:0`);
+    anim(d, [{ transform: "translate(-50%,-50%) scale(.2)", opacity: 0.9 }, { transform: `translate(-50%,-50%) scale(${(4 + power * 3).toFixed(1)})`, opacity: 0 }], { duration: 560, delay: i * 110, fill: "backwards", easing: "ease-out" }).then(() => d.remove());
+  }
+}
+function lightRays(t, color) {
+  if (RM) return;
+  const d = fxEl(`position:absolute;left:${t.x}px;top:${t.y}px;width:460px;height:460px;margin:-230px 0 0 -230px;background:repeating-conic-gradient(${color} 0 5deg,transparent 5deg 22deg);-webkit-mask-image:radial-gradient(circle,#000 0,transparent 68%);mask-image:radial-gradient(circle,#000 0,transparent 68%);mix-blend-mode:screen;pointer-events:none;opacity:0`);
+  anim(d, [{ opacity: 0, transform: "rotate(0deg) scale(.3)" }, { opacity: 0.9, transform: "rotate(18deg) scale(.9)", offset: 0.3 }, { opacity: 0, transform: "rotate(45deg) scale(1.3)" }], { duration: 700, easing: "ease-out" }).then(() => d.remove());
+}
+function zoomPunch(t, scale, ms) {
+  if (RM) return; stageIn.style.transformOrigin = `${t.x}px ${t.y}px`;
+  stageIn.animate([{ transform: "scale(1)" }, { transform: `scale(${scale})`, offset: 0.22 }, { transform: "scale(1)" }], { duration: ms, easing: "ease-out", composite: "add" }).finished.catch(() => {}).then(() => { stageIn.style.transformOrigin = ""; });
+}
+function explosionFx(x, y) {
+  if (RM) return;
+  const ball = fxEl(`position:absolute;left:${x}px;top:${y}px;width:260px;height:260px;margin:-130px 0 0 -130px;border-radius:50%;background:radial-gradient(circle,#fff 0,#ffe27a 22%,#ff8a2a 50%,rgba(120,30,10,.75) 72%,transparent 74%);box-shadow:0 0 80px #ff8a2a;pointer-events:none;opacity:0;z-index:28`);
+  anim(ball, [{ opacity: 1, transform: "scale(.2)" }, { opacity: 1, transform: "scale(1.1)", offset: 0.35 }, { opacity: 0, transform: "scale(1.7)" }], { duration: 760, easing: "ease-out" }).then(() => ball.remove());
+  const smoke = fxEl(`position:absolute;left:${x}px;top:${y}px;width:300px;height:300px;margin:-150px 0 0 -150px;border-radius:50%;background:radial-gradient(circle,rgba(60,40,35,.85),rgba(30,20,20,.5) 60%,transparent 72%);pointer-events:none;opacity:0;z-index:27`);
+  anim(smoke, [{ opacity: 0, transform: "translateY(0) scale(.3)" }, { opacity: 0.9, transform: "translateY(-30px) scale(1)", offset: 0.4 }, { opacity: 0, transform: "translateY(-110px) scale(1.5)" }], { duration: 1200, delay: 120, fill: "backwards", easing: "ease-out" }).then(() => smoke.remove());
+  burst(x, y, { n: 90, color: ["#fff", "#ffd36a", "#ff8a2a", "#c0392b"], speed: 11, size: 6, life: 900 });
+  burst(x, y, { n: 50, color: ["#5a4636", "#3a2c24", "#8a7a68"], speed: 8, size: 7, life: 1100, grav: 0.12 });
+  for (let k = 0; k < 3; k++) setTimeout(() => ringFx(x, y, k % 2 ? "#ffd36a" : "#ff8a2a", 220 + k * 80, 640), k * 100);
+}
+function hitJuice(kind, color) {
+  const t = target("p"), big = kind === "ult";
+  if (kind === "attack") { speedLines(t, color, 10, 0.5); zoomPunch(t, 1.03, 200); return; }
+  speedLines(t, color, big ? 30 : 18, big ? 1.1 : 0.75); zoomPunch(t, big ? 1.12 : 1.06, big ? 460 : 300); groundWave(color, big ? 1 : 0.6);
+  if (big) { lightRays(t, color); flash(color, 0.5, 300); }
+}
 async function playerTurn(kind) {
   const ch = CH[player.key], apply = () => {
     if (kind === "attack") player.attack(monster);
@@ -1446,9 +1736,14 @@ async function playerTurn(kind) {
     else if (kind === "ult") player.ultimate(monster);
     updatePlates();
   };
-  if (kind === "attack") await ch.attack(apply);
-  else if (kind === "special") await ch.special(apply);
-  else if (kind === "ult") await ch.ultimate(apply);
+  const col = player.key === "wizard" && kind === "ult" ? "#ff8a2a" : SKILL_COL[player.key] || "#fff", nm = player.names();
+  const dm = !(player.key === "healer" && kind !== "attack");
+  const ap = dm && (kind === "attack" || kind === "special" || kind === "ult") ? () => { hitJuice(kind, col); apply(); } : apply;
+  if (kind === "special") skillTag(nm.sp, col);
+  if (kind === "ult") await cutIn(nm.ul, `${player.kind} · 궁극기`, col);
+  if (kind === "attack") await ch.attack(ap);
+  else if (kind === "special") await ch.special(ap);
+  else if (kind === "ult") await ch.ultimate(ap);
   else if (kind === "potion") {
     potions--;
     await potionFx(() => {
@@ -1460,6 +1755,14 @@ async function playerTurn(kind) {
   updatePlates(); renderHud();
 }
 
+async function reviveFx() {
+  player.revive(); await flush();
+  const me = pt("p", 0.5, 0.5);
+  ringFx(me.x, me.y, "#5dff8a", 200, 800); flash("#3cff8a", 0.45, 700);
+  burst(me.x, me.y, { n: 50, color: ["#5dff8a", "#b6ffcb", "#fff"], speed: 5, life: 800, grav: -0.02 });
+  sparkles("p", ["#5dff8a", "#fff"], 900); sfx.level();
+  setControls(); await wait(800);
+}
 async function act(kind) {
   if (busy || !monster || !monster.alive || !player.alive) return;
   if ((kind === "special" && !player.canSpecial()) || (kind === "ult" && !player.canUltimate()) || (kind === "potion" && potions <= 0)) return;
@@ -1468,6 +1771,7 @@ async function act(kind) {
   if (!monster.alive) { await victory(); return; }
   setPill("en"); await wait(350);
   await monsterTurn();
+  if (!player.alive && player.canRevive && player.canRevive()) await reviveFx();
   if (!player.alive) { await defeat(); return; }
   busy = false; setPill("me"); setControls();
 }
@@ -1480,7 +1784,8 @@ async function victory() {
   sfx.boom();
   for (let i = 0; i < (dragon ? 5 : 1); i++) setTimeout(() => burst(c.x + rnd(-40, 40), c.y + rnd(-30, 30), { n: 40, color: ["#fff", "#ffd36a", "#ff8a4a", "#ff5a3a"], speed: 6, size: 5, life: 700 }), i * 140);
   if (dragon) { flash("#fff", 0.7, 700); shake(12, 700); }
-  await anim(F.m.flash, [{ filter: "brightness(1)", opacity: 1, transform: "none" }, { filter: "brightness(3) saturate(0)", opacity: 1, offset: 0.3 }, { filter: "brightness(3) saturate(0)", opacity: 0, transform: "scale(.7) translateY(30px)" }], { duration: dragon ? 900 : 620, fill: "forwards" });
+  await anim(F.m.flash, [{ filter: "brightness(1)", opacity: 1, transform: "none" }, { filter: "brightness(3) saturate(0)", opacity: 1, offset: 0.3 }, { filter: "brightness(3) saturate(0)", opacity: 0, transform: "scale(.7) translateY(30px)" }], { duration: dragon ? 900 : 620 });
+  F.m.flash.getAnimations().forEach((x) => x.cancel()); F.m.flash.style.opacity = "0";
   player.gainExp(monster.expReward);
   await flush();
   setControls();
@@ -1520,9 +1825,11 @@ function endGame() {
 /* ---------- 시작 화면 구성 ---------- */
 const JOBS = [
   { k: "warrior", n: "전사", s: "HP 150 · 공격 25 · 방어 15", d: "공격할 때마다 분노가 쌓인다. 분노 30에서 분노 폭발, 100에서 궁극기." },
-  { k: "wizard", n: "마법사", s: "HP 80 · 공격 35 · 방어 8", d: "마나로 싸운다. 파이어볼은 공격력 3배, 마나가 떨어지면 지팡이로 때린다." },
-  { k: "healer", n: "힐러", s: "HP 100 · 공격 15 · 방어 10", d: "치유로 HP를 40 회복한다. 궁극기는 HP 완전 회복과 공격력 +15." },
-  { k: "hero", n: "영웅", s: "HP 200 · 공격 80 · 방어 60", d: "가장 강한 기본 스탯. 공격할 때마다 마나가 15 회복된다." },
+  { k: "wizard", n: "마법사", s: "HP 90 · 공격 36 · 방어 9", d: "붉은 섬광으로 마나를 모으는 마법학교 출신. 스투페파이는 공격력 3.5배, 궁극기 봄바르다 맥시마는 방어를 무시하는 ×8 대폭발." },
+  { k: "healer", n: "힐러", s: "HP 100 · 공격 15 · 방어 10", d: "빛의 화살로 마나 +15 회복. 치유로 HP 40 회복, 궁극기는 HP 완전 회복과 공격력 +15." },
+  { k: "darkwizard", n: "흑마법사", s: "HP 90 · 공격 36 · 방어 9", d: "크루시오로 적의 방어를 깎고 마나를 모은다. 호크룩스로 1회 부활, 궁극기는 아바다 케다브라(즉사)." },
+  { k: "yeon", n: "이연 (구미호 신)", s: "HP 10000 · 공격 10000 · 방어 10000", d: "세계관 최강자. 발도 일격으로 신력을 모아 여우구슬을 터뜨리고, 신력이 가득 차면 하늘을 가르는 거대한 번개를 내려 찍는다." },
+  { k: "hero", n: "영웅", s: "HP 200 · 공격 80 · 방어 60", d: "좋은 기본 스탯. 공격할 때마다 마나가 15 회복된다." },
 ];
 function buildSetup() {
   $("#jobs").innerHTML = JOBS.map((j, i) => `<label class="pick"><input type="radio" name="job" value="${j.k}"${i === 0 ? " checked" : ""}><div class="pv">${ART[j.k]()}</div><b>${j.n}</b><span class="stats">${j.s}</span><span class="desc">${j.d}</span></label>`).join("");
@@ -1534,7 +1841,7 @@ function buildSetup() {
   ].map((g) => `<button class="pick legend" type="button" data-r="${g[0]}"><span class="gi">${g[1]}<b>${g[2]}</b></span><span class="desc">${g[3]}</span></button>`).join("");
   $("#title-bg").innerHTML = bgHTML(THEMES[0], 3);
   $("#title-dragon").innerHTML = ART.dragon({ body: "#241226", dk: "#0d060f", belly: "#33183a", wing: "#1a0c20", horn: "#4a3550", eye: "#ffb347", rune: false });
-  $("#title-cast").innerHTML = ["warrior", "wizard", "healer", "hero"].map((k) => `<div>${ART[k]()}</div>`).join("");
+  $("#title-cast").innerHTML = ["warrior", "wizard", "healer", "darkwizard", "yeon", "hero"].map((k) => `<div>${ART[k]()}</div>`).join("");
 }
 
 /* ---------- 이벤트 ---------- */
